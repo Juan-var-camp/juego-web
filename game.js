@@ -34,8 +34,23 @@ function spawnObstacle() {
 }
 
 let keys = {};
+let secretCodeSequence = [];
+const secretCode = ["w", "i", "n"];
 
-window.addEventListener("keydown", e => keys[e.key] = true);
+window.addEventListener("keydown", e => {
+  keys[e.key] = true;
+  
+  // Pa ganar rapido WIN
+  secretCodeSequence.push(e.key.toLowerCase());
+  if (secretCodeSequence.length > 3) {
+    secretCodeSequence.shift();
+  }
+  
+  // Verificar si se ingresó la combinación
+  if (secretCodeSequence.join("") === secretCode.join("") && gameState === "playing") {
+    gameState = "win";
+  }
+});
 window.addEventListener("keyup", e => keys[e.key] = false);
 
 function collide(a, b) {
@@ -74,16 +89,16 @@ function updateTime() {
   ctx.fillText("⏱ Tiempo: " + elapsed + "s", 10, 25);
   ctx.fillText("🛡 Esquivados: " + score, 10, 50);
   
-  // Aumentar dificultad progresivamente suave
+  // Aqui se ajusta la dificultad
   if (elapsed < 15) {
-    // Primeros 15 segundos: dificultad muy suave
+    // Primeros 15 segundos: chill
     obstacleSpeed = 2 + elapsed * 0.08;
     spawnRate = Math.max(45, 70 - elapsed * 0.5);
   } else {
-    // Después de 15 segundos: dificultad intermedia
+    // Después de 15 segundos: Se puede ganar
     const difficultyPhase = elapsed - 15;
-    obstacleSpeed = 2.8 + difficultyPhase * 0.25;  // Aumento moderado
-    spawnRate = Math.max(25, 45 - difficultyPhase);  // Menos agresivo
+    obstacleSpeed = 2.8 + difficultyPhase * 0.25;  
+    spawnRate = Math.max(25, 45 - difficultyPhase); 
   }
 }
 
@@ -99,9 +114,6 @@ function loop() {
     ctx.font = "bold 36px Arial";
     ctx.textAlign = "center";
     ctx.fillText("Salva al Hígado", canvas.width / 2, canvas.height / 2 - 50);
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("de un foráneo después de su desayuno matutino", canvas.width / 2, canvas.height / 2 - 10);
     ctx.font = "18px Arial";
     ctx.fillText("Esquiva las cervezas durante 30 segundos", canvas.width / 2, canvas.height / 2 + 30);
     ctx.font = "16px Arial";
@@ -143,22 +155,31 @@ function loop() {
   }
 
   if (gameState === "win") {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
     ctx.fillStyle = "#00ff88";
-    ctx.font = "bold 24px Arial";
+    ctx.font = "bold 36px Arial";
     ctx.textAlign = "center";
+    ctx.fillText("¡GANASTE!", canvas.width / 2, canvas.height / 2 - 100);
     ctx.fillText("Has salvado el hígado", canvas.width / 2, canvas.height / 2 - 60);
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#fff";
-    ctx.fillText("de un foráneo después de su desayuno", canvas.width / 2, canvas.height / 2 - 35);
-    ctx.fillText("matutino", canvas.width / 2, canvas.height / 2 - 15);
-    ctx.font = "20px Arial";
+    
+    ctx.font = "bold 16px Arial";
     ctx.fillStyle = "#ffff00";
-    ctx.fillText("Cervezas esquivadas: " + score, canvas.width / 2, canvas.height / 2 + 5);
+    ctx.fillText("Ahora puedes saber quien soy:", canvas.width / 2, canvas.height / 2 - 15);
+    
+    ctx.font = "18px Arial";
     ctx.fillStyle = "#fff";
+    ctx.fillText("Nicolle Perez • 18 años", canvas.width / 2, canvas.height / 2 + 15);
+    ctx.fillText("De Cúcuta", canvas.width / 2, canvas.height / 2 + 40);
+    
+    ctx.font = "bold 20px Arial";
+    ctx.fillStyle = "#ffff00";
+    ctx.fillText("Cervezas esquivadas: " + score, canvas.width / 2, canvas.height / 2 + 75);
+    
+    ctx.fillStyle = "#00ff88";
     ctx.font = "16px Arial";
-    ctx.fillText("Presiona ESPACIO para reintentar", canvas.width / 2, canvas.height / 2 + 45);
+    ctx.fillText("Presiona ESPACIO para reintentar", canvas.width / 2, canvas.height / 2 + 110);
   }
 
   if (gameState === "gameover") {
@@ -170,7 +191,7 @@ function loop() {
     ctx.fillText("¡Daño hepático crítico!", canvas.width / 2, canvas.height / 2 - 50);
     ctx.font = "18px Arial";
     ctx.fillStyle = "#fff";
-    ctx.fillText("El hígado no pudo resistir más toxinas", canvas.width / 2, canvas.height / 2 - 15);
+    ctx.fillText("Sigue intentandolo para conocerme", canvas.width / 2, canvas.height / 2 - 15);
     ctx.font = "20px Arial";
     ctx.fillStyle = "#ffff00";
     ctx.fillText("Cervezas esquivadas: " + score, canvas.width / 2, canvas.height / 2 + 20);
