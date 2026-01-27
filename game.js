@@ -170,8 +170,8 @@ function loop() {
     
     ctx.font = "18px Arial";
     ctx.fillStyle = "#fff";
-    ctx.fillText("Nicolle", canvas.width / 2, canvas.height / 2 + 15);
-    ctx.fillText("'________", canvas.width / 2, canvas.height / 2 + 40);
+    ctx.fillText("Nicolle Perez tengo 18 años", canvas.width / 2, canvas.height / 2 + 15);
+    ctx.fillText("De Cucuta", canvas.width / 2, canvas.height / 2 + 40);
     
     ctx.font = "bold 20px Arial";
     ctx.fillStyle = "#ffff00";
